@@ -1,0 +1,588 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package inventory;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.cloud.FirestoreClient;
+import static inventory.AssetsHome.initialize;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author RIIO
+ */
+public final class MoveAsset extends javax.swing.JFrame {
+
+    /**
+     * Creates new form MoveAsset
+     */
+    String id;
+     public MoveAsset() {
+        
+        initComponents();
+         
+    }
+    public MoveAsset(Object docid) throws IOException {
+        super("Move Asset");
+        initComponents();
+         if (FirebaseApp.getApps().isEmpty()) {
+        initialize();
+        }
+         loadDocumentData(String.valueOf(docid));
+         id=docid.toString();
+    }
+public static void moveData(String id,String department,String movedBy,String reason,String approvedBy,String movedOn,
+        String estimatedOn,String returnedBy,String returnedOn, String condition) throws IOException, InterruptedException, ExecutionException
+{
+   //Initialize database firebase
+        
+    // Get Firestore instance
+    
+        Firestore db = FirestoreClient.getFirestore();
+        SimpleDateFormat dte=new SimpleDateFormat("dd/MM/yyyy");
+        Date d=new Date();
+        // Example data to be added
+        Map<String, Object> data = new HashMap<>();
+        data.put("MovedAssetId", id);
+        data.put("MovedAssetToDepartment", department);
+        data.put("MovedAssetBy", movedBy);
+        data.put("MovedAssetReason", reason);
+        data.put("MovedAssetApprovedBy", approvedBy);
+        data.put("MovedAssetOn", movedOn);
+        data.put("MovedAssetEstimatedOn",estimatedOn );
+        data.put("MovedAssetReturnedBy", returnedBy);
+        data.put("MovedAssetReturnedOn", returnedOn);
+        data.put("MovedAssetReturnedCondition", condition);
+        data.put("AssetRegisteredBy", "Admin");
+        data.put("AssetRegisteredOn",dte.format(d) );
+        // Add a new document with a generated ID
+        DocumentReference ref = db.collection("MovedAssets").document();
+        ref.set(data).get(); // .get() is optional if you want to wait for the operation to complete
+        JOptionPane.showMessageDialog(null,"Asset Moved","System Info",JOptionPane.INFORMATION_MESSAGE);
+        
+}
+public void loadDocumentData(String docid)
+{
+    Firestore db = FirestoreClient.getFirestore();
+    DocumentReference docRef = db.collection("AssetInfo").document(docid);
+       // Asynchronously retrieve the document
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+          try {
+            // Get the document snapshot
+            DocumentSnapshot document = future.get();
+              if (document.exists()) {
+                // Document data
+                Map<String, Object> data = document.getData();
+                txtAssetName.setText(String.valueOf(data.get("AssetName")));
+                txtAssetCode.setText(String.valueOf(data.get("AssetCode")));
+                txtAssetSN.setText(String.valueOf(data.get("AssetSN")));
+                txtAssetCat.setText(String.valueOf(data.get("AssetCategory")));
+                txtAssetDep.setText(String.valueOf(data.get("AssetDepartment")));
+                //txtAssetQuantity.setText(String.valueOf(data.get("AssetQuantity")));
+                //txtAssetStatus.setText(String.valueOf(data.get("AssetStatus")));
+                /*for(int i=0;i<cboAssetDep.getItemCount();i++)
+                {
+                    if((String.valueOf(cboAssetDep.getItemAt(i)).replaceAll("\\s", "")).equalsIgnoreCase(String.valueOf(data.get("AssetDepartment")).replaceAll("\\s", "")))
+                    {
+                        cboAssetDep.setSelectedIndex(i);
+                        break;
+                    }
+                }*/
+                //txtAssetLoc.setText(String.valueOf(data.get("AssetLocation")));
+                //txtAssetReason.setText(String.valueOf(data.get("AssetDescription")));
+            } else {
+                JOptionPane.showMessageDialog(null,"No such Asset Found");
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            JOptionPane.showMessageDialog(null,e);
+        }
+}
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel13 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        txtAssetMovedBy = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtAssetName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jdAssetReturnedOn = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        txtAssetReturnedBy = new javax.swing.JTextField();
+        jdAssetMovedOn = new com.toedter.calendar.JDateChooser();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtAssetReason = new javax.swing.JTextArea();
+        txtAssetDep = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        txtAssetCat = new javax.swing.JTextField();
+        txtAssetCode = new javax.swing.JTextField();
+        txtAssetSN = new javax.swing.JTextField();
+        txtAssetApprovedBy = new javax.swing.JTextField();
+        jLabel34 = new javax.swing.JLabel();
+        btnMoveAsset = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
+        cboAssetMoveDep = new javax.swing.JComboBox<>();
+        jdAssetEstDate = new com.toedter.calendar.JDateChooser();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtAssetReturnedCondition = new javax.swing.JTextArea();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
+        setResizable(false);
+
+        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel13.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        txtAssetMovedBy.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetMovedBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetMovedByActionPerformed(evt);
+            }
+        });
+
+        jLabel18.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel18.setText("Condition on Return ");
+
+        jLabel3.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel3.setText("Asset Code");
+
+        txtAssetName.setEditable(false);
+        txtAssetName.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetNameActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(83, 5, 25));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("ASSET MOVEMENT");
+        jLabel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        jLabel30.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel30.setText("Asset Move Approved By");
+
+        jLabel11.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel11.setText("Asset Department- From");
+
+        jLabel32.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel32.setText("Estimated Return Date");
+
+        jLabel31.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel31.setText("Movement Date");
+
+        jLabel15.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel15.setText("Reason For Movement");
+
+        txtAssetReturnedBy.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetReturnedBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetReturnedByActionPerformed(evt);
+            }
+        });
+
+        txtAssetReason.setColumns(20);
+        txtAssetReason.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetReason.setRows(100);
+        jScrollPane3.setViewportView(txtAssetReason);
+
+        txtAssetDep.setEditable(false);
+        txtAssetDep.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetDepActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel16.setText("Asset SN");
+
+        jLabel27.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel27.setText("Asset Moved By");
+
+        txtAssetCat.setEditable(false);
+        txtAssetCat.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetCat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetCatActionPerformed(evt);
+            }
+        });
+
+        txtAssetCode.setEditable(false);
+        txtAssetCode.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetCodeActionPerformed(evt);
+            }
+        });
+
+        txtAssetSN.setEditable(false);
+        txtAssetSN.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetSN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetSNActionPerformed(evt);
+            }
+        });
+
+        txtAssetApprovedBy.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetApprovedBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAssetApprovedByActionPerformed(evt);
+            }
+        });
+
+        jLabel34.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel34.setText("Returned Date");
+
+        btnMoveAsset.setBackground(new java.awt.Color(167, 108, 108));
+        btnMoveAsset.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        btnMoveAsset.setText("Save");
+        btnMoveAsset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoveAssetActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel29.setText("Asset Name");
+
+        cboAssetMoveDep.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        cboAssetMoveDep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Department", "RIIO SCHOOL", "RIIO iHOSPITAL - iTechClinic", "RIIO iHOSPITAL - iCHECKS", "KIBAGABAGA Hospital" }));
+        cboAssetMoveDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboAssetMoveDepActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel12.setText("Asset Department- To");
+
+        jLabel17.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel17.setText("Asset Category");
+
+        jLabel33.setFont(new java.awt.Font("Calisto MT", 1, 14)); // NOI18N
+        jLabel33.setText("Asset Returned By");
+
+        txtAssetReturnedCondition.setColumns(20);
+        txtAssetReturnedCondition.setFont(new java.awt.Font("Calisto MT", 0, 12)); // NOI18N
+        txtAssetReturnedCondition.setRows(100);
+        jScrollPane4.setViewportView(txtAssetReturnedCondition);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel32, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel30, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel31, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel33, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(6, 6, 6))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(9, 9, 9))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jdAssetReturnedOn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4)
+                            .addComponent(txtAssetReturnedBy)
+                            .addComponent(jdAssetEstDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtAssetApprovedBy)
+                            .addComponent(cboAssetMoveDep, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtAssetCat)
+                            .addComponent(txtAssetSN)
+                            .addComponent(txtAssetCode)
+                            .addComponent(txtAssetName)
+                            .addComponent(btnMoveAsset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtAssetMovedBy, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtAssetDep, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jdAssetMovedOn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAssetName, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAssetCode, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAssetSN, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(txtAssetCat, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAssetDep, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboAssetMoveDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAssetMovedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAssetApprovedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel31, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jdAssetMovedOn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jdAssetEstDate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAssetReturnedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jdAssetReturnedOn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMoveAsset)
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13.setLayout(jPanel13Layout);
+        jPanel13Layout.setHorizontalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel13Layout.setVerticalGroup(
+            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 444, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 604, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMoveAssetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveAssetActionPerformed
+        String department=String.valueOf(cboAssetMoveDep.getSelectedItem());
+        String movedBy=txtAssetMovedBy.getText();
+        //String moveTo=cboAssetMoveDep.getSelectedItem().toString();
+        String reason=txtAssetReason.getText();
+        String approvedBy=txtAssetApprovedBy.getText();
+        String movedOn=jdAssetMovedOn.getDate().toString();
+        String estimatedOn=jdAssetEstDate.getDate().toString();
+        String returnedBy=txtAssetReturnedBy.getText();
+        String returnedOn=String.valueOf(jdAssetReturnedOn.getDate());
+        String condition=txtAssetReturnedCondition.getText();
+        try {
+            moveData(id,department,movedBy,reason,approvedBy,movedOn,
+       estimatedOn,returnedBy,returnedOn,condition);
+            dispose();
+            
+        } catch (IOException | InterruptedException | ExecutionException ex) {
+            JOptionPane.showMessageDialog(null,ex);
+        }
+        
+    }//GEN-LAST:event_btnMoveAssetActionPerformed
+
+    private void txtAssetNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetNameActionPerformed
+
+    private void txtAssetCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetCatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetCatActionPerformed
+
+    private void txtAssetCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetCodeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetCodeActionPerformed
+
+    private void txtAssetSNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetSNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetSNActionPerformed
+
+    private void cboAssetMoveDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboAssetMoveDepActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboAssetMoveDepActionPerformed
+
+    private void txtAssetMovedByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetMovedByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetMovedByActionPerformed
+
+    private void txtAssetDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetDepActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetDepActionPerformed
+
+    private void txtAssetApprovedByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetApprovedByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetApprovedByActionPerformed
+
+    private void txtAssetReturnedByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAssetReturnedByActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAssetReturnedByActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MoveAsset.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MoveAsset.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MoveAsset.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MoveAsset.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MoveAsset().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnMoveAsset;
+    private javax.swing.JComboBox<String> cboAssetMoveDep;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private com.toedter.calendar.JDateChooser jdAssetEstDate;
+    private com.toedter.calendar.JDateChooser jdAssetMovedOn;
+    private com.toedter.calendar.JDateChooser jdAssetReturnedOn;
+    private javax.swing.JTextField txtAssetApprovedBy;
+    private javax.swing.JTextField txtAssetCat;
+    private javax.swing.JTextField txtAssetCode;
+    private javax.swing.JTextField txtAssetDep;
+    private javax.swing.JTextField txtAssetMovedBy;
+    private javax.swing.JTextField txtAssetName;
+    private javax.swing.JTextArea txtAssetReason;
+    private javax.swing.JTextField txtAssetReturnedBy;
+    private javax.swing.JTextArea txtAssetReturnedCondition;
+    private javax.swing.JTextField txtAssetSN;
+    // End of variables declaration//GEN-END:variables
+}
